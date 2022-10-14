@@ -1,24 +1,13 @@
-import { useState } from "react";
-import useAxios from "./hooks/useAxios";
-function App() {
-  const { data, fetcher, isLoading } = useAxios("http://localhost:3001/posts");
-  const handleClick = () => {
-    fetcher();
-  };
+import { Route, Routes } from "react-router-dom";
+import Boards from "./pages/Boards";
+import Detail from "./pages/Detail";
 
-  const [localData, setLocalData] = useState("");
-  const { getItem, setItem } = useLocal();
-  const handleChange = ({ target }) => {
-    setLocalData(target.value);
-    setItem("key", localData);
-  };
+function App() {
   return (
-    <>
-      <div onClick={handleClick}>
-        {data ? data[0]?.title : isLoading ? "loading" : "nodata"}
-      </div>
-      <input value={localData} onChange={handleChange} />
-    </>
+    <Routes>
+      <Route index element={<Boards />} />
+      <Route path="/:id" element={<Detail />} />; ;
+    </Routes>
   );
 }
 
