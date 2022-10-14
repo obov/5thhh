@@ -6,13 +6,13 @@ const Board = ({ type, color }) => {
   ];
   return (
     <div>
-      <div style={{ backgroundColor: color, width: 300, height: 100 }}>
+      <div style={{ backgroundColor: color, width: 100, height: 100 }}>
         {type}
       </div>
       {todos
         .filter((todo) => todo.type === type)
         .map((todo) => (
-          <Todo {...todo} />
+          <Todo key={todo.id} {...todo} />
         ))}
       <div>추가</div>
     </div>

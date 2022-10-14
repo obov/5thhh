@@ -1,3 +1,4 @@
+import { TextField } from "@mui/material";
 import { useState } from "react";
 
 const MainInput = () => {
@@ -13,9 +14,14 @@ const MainInput = () => {
   //   setNewTodo(copyTodo);
   // };
   return (
-    <div>
-      <input value={newTodo.title} onChange={handleChangeTitle} />
-    </div>
+    <TextField
+      value={newTodo.title}
+      onChange={handleChangeTitle}
+      sx={{ width: "100%" }}
+      id="standard-basic"
+      label="Standard"
+      variant="standard"
+    />
   );
 };
 
