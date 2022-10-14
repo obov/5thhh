@@ -1,24 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
-
+import { useState } from "react";
+import useAxios from "./hooks/useAxios";
 function App() {
+  const { data, fetcher, isLoading } = useAxios("http://localhost:3001/posts");
+  const handleClick = () => {
+    fetcher();
+  };
+
+  const [localData, setLocalData] = useState("");
+  const { getItem, setItem } = useLocal();
+  const handleChange = ({ target }) => {
+    setLocalData(target.value);
+    setItem("key", localData);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <div onClick={handleClick}>
+        {data ? data[0]?.title : isLoading ? "loading" : "nodata"}
+      </div>
+      <input value={localData} onChange={handleChange} />
+    </>
   );
 }
 
