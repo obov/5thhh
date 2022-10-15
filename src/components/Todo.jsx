@@ -6,10 +6,14 @@ import { up, down } from "../redux/store";
 const Todo = ({ title, phase, id }) => {
   const dispatch = useDispatch();
   const handleClickLeft = () => {
-    dispatch(down({ id }));
+    setTimeout(() => {
+      dispatch(down({ id }));
+    }, 200);
   };
   const handleClickRight = () => {
-    dispatch(up({ id }));
+    setTimeout(() => {
+      dispatch(up({ id }));
+    }, 200);
   };
   return (
     <Card

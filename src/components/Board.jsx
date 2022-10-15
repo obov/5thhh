@@ -1,9 +1,13 @@
-import { Box, Button, Card } from "@mui/material";
-import { fontGrid } from "@mui/material/styles/cssUtils";
+import { Button, Card } from "@mui/material";
 import Todo from "./Todo";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { useSelector } from "react-redux";
-const Board = ({ type, color, todos }) => {
+const Board = ({ type, color, todos, setPhase }) => {
+  const inputRef = useSelector((state) => state.inputRef);
+  const handleClick = () => {
+    setPhase();
+    inputRef.current.children[1].children[0].focus();
+  };
   return (
     <Card
       sx={{
@@ -33,6 +37,7 @@ const Board = ({ type, color, todos }) => {
         <Todo key={todo.id} {...todo} />
       ))}
       <Button
+        onClick={handleClick}
         sx={{
           boxShadow: "1px 1px 1px transparent",
           color: "rgba(0,0,0,0.3)",

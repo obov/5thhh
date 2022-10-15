@@ -1,14 +1,16 @@
 import { Box } from "@mui/material";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import Board from "../components/Board";
 import MainInput from "../components/MainInput";
 
 const Boards = () => {
-  const todos = useSelector((state) => state);
-  console.log("todos:", todos);
+  const todos = useSelector((state) => state.todos);
+  const [phaseNum, setPhaseNum] = useState(1);
+  const phases = JSON.parse(process.env.REACT_APP_PHASES);
   return (
     <>
-      <MainInput />
+      <MainInput phaseNum={phaseNum} />
       <Box
         sx={{
           width: "100%",
@@ -17,26 +19,15 @@ const Boards = () => {
           gap: "24px",
         }}
       >
-        <Board
-          type="todo"
-          color="salmon"
-          todos={todos.filter((todo) => todo.phase === 1)}
-        />
-        <Board
-          type="ing"
-          color="gold"
-          todos={todos.filter((todo) => todo.phase === 2)}
-        />
-        <Board
-          type="done"
-          color="skyblue"
-          todos={todos.filter((todo) => todo.phase === 3)}
-        />
-        <Board
-          type="defer"
-          color="chocolate"
-          todos={todos.filter((todo) => todo.phase === 4)}
-        />
+        {phases.map((phase) => (
+          <Board
+            key={phase.name}
+            type={phase.name}
+            color={phase.color}
+            todos={todos.filter((todo) => todo.phase === phase.num)}
+            setPhase={() => setPhaseNum(phase.num)}
+          />
+        ))}
       </Box>
     </>
   );
