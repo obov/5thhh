@@ -10,7 +10,7 @@ import { useRef } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { add, setPhase, setRef } from "../redux/store";
+import { add, postNewTodo, setPhase, setRef } from "../redux/store";
 
 const MainInput = () => {
   const dispatch = useDispatch();
@@ -22,9 +22,11 @@ const MainInput = () => {
   const handleChangeTitle = ({ target }) => {
     setNewTodoTitle(target.value);
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(add({ id: Date.now(), title: newTodoTitle, phase: phaseNum }));
+    const newTodo = { id: Date.now(), title: newTodoTitle, phase: phaseNum };
+    dispatch(add(newTodo));
+    dispatch(postNewTodo(newTodo));
     setNewTodoTitle("");
   };
   const handleChangePhase = ({ target }) => {
@@ -33,7 +35,7 @@ const MainInput = () => {
 
   useEffect(() => {
     dispatch(setRef(inputRef));
-  });
+  }, [dispatch]);
   return (
     <Card
       sx={{

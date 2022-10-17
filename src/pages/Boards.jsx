@@ -1,11 +1,18 @@
 import { Box } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Board from "../components/Board";
 import MainInput from "../components/MainInput";
+import { useLayoutEffect } from "react";
+import { getTodos } from "../redux/store";
+import Spinner from "../components/Spinner";
 
 const Boards = () => {
-  const todos = useSelector((state) => state.todos);
+  const dispatch = useDispatch();
+  const { todos } = useSelector((state) => state);
   const phases = JSON.parse(process.env.REACT_APP_PHASES);
+  useLayoutEffect(() => {
+    dispatch(getTodos());
+  }, [dispatch]);
   return (
     <>
       <MainInput />
@@ -23,9 +30,13 @@ const Boards = () => {
           },
         }}
       >
-        {phases.map((phase) => (
-          <Board key={phase.name} phase={phase} todos={todos[phase.num]} />
-        ))}
+        {todos.status === "fulfilled" ? (
+          phases.map((phase) => (
+            <Board key={phase.name} phase={phase} todos={todos[phase.num]} />
+          ))
+        ) : (
+          <Spinner />
+        )}
       </Box>
     </>
   );

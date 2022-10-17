@@ -15,7 +15,9 @@ const Layout = ({ children }) => {
   return (
     <Box
       sx={{
-        width: `calc(100vw - ${Math.max(0, sum - 3) && 8}px)`,
+        width: `calc(100vw - ${
+          (Math.max(0, sum - 3) || window.innerHeight < 800) && 8
+        }px)`,
         backgroundColor: "rgba(200,200,200,0.7)",
       }}
     >
@@ -29,9 +31,12 @@ const Layout = ({ children }) => {
           backgroundColor: "rgb(240,240,240)",
           gap: "10px",
           height: "100vh",
+          minHeight: "800px",
           boxShadow: "0 3px 8px rgba(0,0,0,0.3)",
           "@media (max-width: 900px)": {
-            height: `${100 + Math.max(0, sum - 3) * 7}vh`,
+            height: `calc( max(100vh , 800px) + ${
+              Math.max(0, sum - 1) * 80
+            }px)`,
           },
         }}
       >

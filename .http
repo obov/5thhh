@@ -1,1 +1,12 @@
-GET http://localhost:3001/posts
+GET https://fifthhh.herokuapp.com/todos
+###
+POST http://localhost:3001/todos  HTTP/1.1
+Content-Type: application/json; charset=UTF-8
+
+{
+    "id": 111,
+    "title": "우주평화",
+    "phase": 3
+}
+###
+DELETE  https://fifthhh.herokuapp.com/todos/1665997330734  HTTP/1.1

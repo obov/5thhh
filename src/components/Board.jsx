@@ -6,11 +6,11 @@ import { setPhase } from "../redux/store";
 import { Box } from "@mui/system";
 
 const Board = ({ phase, todos }) => {
-  const { color, name } = phase;
+  const { color, num, name } = phase;
   const inputRef = useSelector((state) => state.inputRef);
   const dispatch = useDispatch();
   const handleClick = () => {
-    dispatch(setPhase(phase.num));
+    dispatch(setPhase(num));
     inputRef.current.children[1].children[0].focus();
   };
   return (
@@ -24,6 +24,7 @@ const Board = ({ phase, todos }) => {
         borderRadius: "24px",
         gap: "16px",
         maxHeight: "80vh",
+        animation: "fadeIn 0.8s",
         "@media (max-width: 900px)": {
           paddingX: "8px",
           flexDirection: "row",

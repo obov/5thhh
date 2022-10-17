@@ -1,10 +1,12 @@
-import { configureStore, createSlice } from "@reduxjs/toolkit";
+import {
+  configureStore,
+  createAsyncThunk,
+  createSlice,
+} from "@reduxjs/toolkit";
 const phases = JSON.parse(process.env.REACT_APP_PHASES);
+const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
-const initialTodos = [
-  { id: 333, title: "세계정복", phase: 1 },
-  { id: 222, title: "리엑트 공부", phase: 2 },
-];
+const initialTodos = [];
 
 const attachGroups = (initialTodos, phases) => {
   const groups = phases.reduce((pre, phase) => {
@@ -17,9 +19,43 @@ const attachGroups = (initialTodos, phases) => {
   return { data: initialTodos, ...groups };
 };
 
+const setStatus = (state, status) => ({ ...state, status });
+
+export const getTodos = createAsyncThunk("todosReducer/getTodos", async () => {
+  const data = await (await fetch(apiBaseUrl + "todos")).json();
+  return data;
+});
+
+export const postNewTodo = createAsyncThunk(
+  "todosReducer/postNewTodo",
+  async (payload) => {
+    const data = await (
+      await fetch(apiBaseUrl + "todos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      })
+    ).json();
+    return data;
+  }
+);
+
+export const deleteTodo = createAsyncThunk(
+  "todosReducer/deleteTodo",
+  async (payload) => {
+    const data = await (
+      await fetch(apiBaseUrl + "todos/" + payload.id, {
+        method: "DELETE",
+      })
+    ).json();
+    return data;
+  }
+);
 const todo = createSlice({
   name: "todosReducer",
-  initialState: attachGroups(initialTodos, phases),
+  initialState: setStatus(attachGroups(initialTodos, phases), "init"),
   reducers: {
     add: (state, action) => {
       const newTodo = {
@@ -30,7 +66,10 @@ const todo = createSlice({
       state[action.payload.phase].push({ ...newTodo, inserted: Date.now() });
     },
     remove: (state, action) => {
-      return state.data.filter((todo) => todo.id !== action.payload.id);
+      state.data = state.data.filter((todo) => todo.id !== action.payload.id);
+      state[action.payload.phase] = state[action.payload.phase].filter(
+        (todo) => todo.id !== action.payload.id
+      );
     },
     up: (state, action) => {
       const index = state.data.findIndex((e) => e.id === action.payload.id);
@@ -50,6 +89,32 @@ const todo = createSlice({
       );
       state[updatedTodo.phase].push({ ...updatedTodo, inserted: Date.now() });
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(getTodos.pending, (state, action) => {
+      return setStatus(state, "loading");
+    });
+    builder.addCase(getTodos.fulfilled, (state, action) => {
+      return setStatus(attachGroups(action.payload, phases), "fulfilled");
+    });
+
+    builder.addCase(postNewTodo.rejected, (state, action) => {
+      const newState = { ...state };
+      newState.data = state.data.filter(
+        (todo) => todo.id !== action.payload.id
+      );
+      newState[action.payload.phase] = state[action.payload.phase].filter(
+        (todo) => todo.id !== action.payload.id
+      );
+      return newState;
+    });
+
+    builder.addCase(deleteTodo.rejected, (state, action) => {
+      const newState = { ...state };
+      state.data.push(action.payload);
+      state[action.payload.phase].push(action.payload);
+      return newState;
+    });
   },
 });
 
@@ -82,7 +147,6 @@ const phaseNum = createSlice({
 });
 
 export const { setPhase } = phaseNum.actions;
-
 export default configureStore({
   reducer: {
     todos: todo.reducer,
@@ -93,4 +157,5 @@ export default configureStore({
     getDefaultMiddleware({
       serializableCheck: false,
     }),
+  devTools: process.env.NODE_ENV === "development",
 });

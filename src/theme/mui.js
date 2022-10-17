@@ -24,6 +24,16 @@ export const theme = createTheme({
           background-color: rgba(20, 20, 20, 0.3);
           box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.6);
         }
+        @keyframes fadeIn{
+          from {
+            transform: translateX(-100px);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
       `,
     },
   },
