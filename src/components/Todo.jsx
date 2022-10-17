@@ -5,21 +5,17 @@ import { useDispatch } from "react-redux";
 import { up, down } from "../redux/store";
 const Todo = ({ title, phase, id }) => {
   const dispatch = useDispatch();
-  const handleClickLeft = () => {
-    setTimeout(() => {
-      dispatch(down({ id }));
-    }, 200);
+  const handleAnimationEndLeft = () => {
+    dispatch(down({ id, phase }));
   };
-  const handleClickRight = () => {
-    setTimeout(() => {
-      dispatch(up({ id }));
-    }, 200);
+  const handleAnimationEndRight = () => {
+    dispatch(up({ id, phase }));
   };
   return (
     <Card
       sx={{
         width: "100%",
-        height: 60,
+        minHeight: 60,
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
@@ -43,11 +39,19 @@ const Todo = ({ title, phase, id }) => {
         },
       }}
     >
-      <Button className="btn" disabled={phase === 1} onClick={handleClickLeft}>
+      <Button
+        className="btn"
+        disabled={phase === 1}
+        onAnimationEnd={handleAnimationEndLeft}
+      >
         <KeyboardArrowLeftIcon className="arrow" />
       </Button>
       <Box>{title}</Box>
-      <Button className="btn" disabled={phase === 4} onClick={handleClickRight}>
+      <Button
+        className="btn"
+        disabled={phase === 4}
+        onAnimationEnd={handleAnimationEndRight}
+      >
         <KeyboardArrowRightIcon className="arrow" />
       </Button>
     </Card>

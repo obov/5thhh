@@ -9,4 +9,22 @@ export const theme = createTheme({
       // contrastText: main값을 통해 계산됨
     },
   },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: `
+        ::-webkit-scrollbar {
+          width: 8px; 
+          height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+          background-color: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+          border-radius: 4px;
+          background-color: rgba(20, 20, 20, 0.3);
+          box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.6);
+        }
+      `,
+    },
+  },
 });
