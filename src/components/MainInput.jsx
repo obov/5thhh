@@ -24,7 +24,13 @@ const MainInput = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newTodo = { id: Date.now(), title: newTodoTitle, phase: phaseNum };
+    const newDate = Date.now();
+    const newTodo = {
+      id: newDate,
+      title: newTodoTitle,
+      phase: phaseNum,
+      updated: newDate,
+    };
     dispatch(add(newTodo));
     dispatch(postNewTodo(newTodo));
     setNewTodoTitle("");

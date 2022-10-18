@@ -1,27 +1,31 @@
-import { Box, Button, Card } from "@mui/material";
+import { Box, Button, Card, TextField } from "@mui/material";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import { useDispatch } from "react-redux";
-import { up, down, deleteTodo, patchTodo } from "../redux/store";
+import { deleteTodo, patchTodo } from "../redux/store";
 import { useState } from "react";
 import useTimeout from "../hooks/useTimeout";
 import useDebounce from "../hooks/useDebounce";
+import { useRef } from "react";
+import { useEffect } from "react";
 
 const Todo = ({ title, phase, id }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isHoveredLong, setIsHoveredLong] = useState(false);
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [todoTitle, setTodoTitle] = useState(title);
+  const [newTitle, setNewTitle] = useState(todoTitle);
+  const inputRef = useRef(null);
   const dispatch = useDispatch();
 
   const { setOut, clearOut } = useTimeout(() => {
     setIsHoveredLong(true);
-  }, 2000);
-  const { setOut: setOutDelete } = useTimeout(() => {
-    dispatch(deleteTodo({ id, phase }));
-  }, 300);
-  const debouncedDelete = useDebounce(() => {
-    setOutDelete();
-  }, 1000);
+  }, 1200);
+
+  const debouncer = useDebounce(1000);
 
   const handleMouseEnder = () => {
     setIsHovered(true);
@@ -32,16 +36,48 @@ const Todo = ({ title, phase, id }) => {
     clearOut();
     setIsHoveredLong(false);
   };
-  const handleAnimationEndLeft = () => {
-    dispatch(patchTodo({ id, phase: phase - 1 }));
-  };
-  const handleAnimationEndRight = () => {
-    dispatch(patchTodo({ id, phase: phase + 1 }));
-  };
-  const handleClickDelete = () => {
-    debouncedDelete();
+
+  const patchPrevDebounced = debouncer(() => {
+    dispatch(patchTodo({ id, phase: phase - 1, updated: Date.now() }));
+  });
+  const handleClickPrev = () => {
+    patchPrevDebounced();
   };
 
+  const patchNextDebounced = debouncer(() => {
+    dispatch(patchTodo({ id, phase: phase + 1, updated: Date.now() }));
+  });
+  const handleClickNext = () => {
+    patchNextDebounced();
+  };
+
+  const deletDebounced = debouncer(() => {
+    dispatch(deleteTodo({ id, phase }));
+  });
+  const handleClickDelete = () => {
+    deletDebounced();
+  };
+  const handleClickEdit = () => {
+    setIsEditing(true);
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsEditing(false);
+    setTodoTitle(newTitle);
+    dispatch(patchTodo({ id, title: newTitle }));
+  };
+  const handleChangeNewTitle = ({ target }) => {
+    setNewTitle(target.value);
+  };
+  const handleBlur = () => {
+    setNewTitle(todoTitle);
+    setIsEditing(false);
+  };
+  useEffect(() => {
+    if (isEditing) {
+      inputRef.current.children[0].children[0].focus();
+    }
+  }, [isEditing]);
   return (
     <>
       <Card
@@ -52,7 +88,7 @@ const Todo = ({ title, phase, id }) => {
           alignItems: "center",
           justifyContent: "space-between",
           borderRadius: "24px",
-          paddingX: "4px",
+          paddingX: "2px",
           position: "relative",
           ".btn": {
             maxWidth: "30px",
@@ -65,28 +101,53 @@ const Todo = ({ title, phase, id }) => {
             justifyContent: "center",
             position: "relative",
           },
+          ".btn:hover": {
+            backgroundColor: "rgba(0,0,0,0.1)",
+          },
           ".btn .arrow": {
             color: "transparent",
           },
           "&:hover .btn .arrow": {
             color: "rgba(0,0,0,0.7)",
           },
-          ".title": { transition: "1s" },
-          "&:hover .title.up": {
-            transform: "translateY(-12px)",
+          ".editInput": { transform: "translateY(-14px)", width: "80%" },
+          ".title": {
+            transition: "0.5s",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            cursor: "pointer",
+            padding: "2px",
+            borderRadius: "5px",
           },
-          ".fadeBtn": {
-            transition: "1s",
+          ".title:hover": {
+            backgroundColor: "rgba(0,0,0,0.1)",
+          },
+          "&:hover .title.up": {
+            transform: "translateY(-14px)",
+          },
+          ".fadeBtns": {
+            width: "100%",
+            height: "36px",
+            display: "flex",
+            justifyContent: "center",
+            transition: "0.5s",
             position: "absolute",
-            minWidth: "30px",
-            maxWidth: "30px",
-            height: "30px",
             top: "60px",
             left: "50%",
             transform: "translateX(-50%)",
-          },
-          ".fadeBtn.up": {
-            transform: "translate(-50%,-30px)",
+            ".delete, .edit": {
+              minWidth: "30px",
+              maxWidth: "30px",
+              height: "30px",
+              borderRadius: "16px",
+            },
+            ".delete:hover, .edit:hover": {
+              backgroundColor: "rgba(0,0,0,0.1)",
+            },
+            "&.up": {
+              transform: "translate(-50%,-28px)",
+            },
           },
         }}
         onMouseEnter={handleMouseEnder}
@@ -95,25 +156,43 @@ const Todo = ({ title, phase, id }) => {
         <Button
           className="btn"
           disabled={phase === 1}
-          onAnimationEnd={handleAnimationEndLeft}
+          onClick={handleClickPrev}
         >
           <KeyboardArrowLeftIcon className="arrow" />
         </Button>
-        <Box className={`title ${isHoveredLong && "up"}`}>{title}</Box>
+        {isEditing ? (
+          <Box className="editInput" component="form" onSubmit={handleSubmit}>
+            <TextField
+              value={newTitle}
+              onChange={handleChangeNewTitle}
+              onBlur={handleBlur}
+              id="standard-basic"
+              label={null}
+              variant="standard"
+              ref={inputRef}
+            />
+          </Box>
+        ) : (
+          <Box className={`title ${(isHoveredLong || isEditing) && "up"}`}>
+            {todoTitle}
+          </Box>
+        )}
         <Button
           className="btn"
           disabled={phase === 4}
-          onAnimationEnd={handleAnimationEndRight}
+          onClick={handleClickNext}
         >
           <KeyboardArrowRightIcon className="arrow" />
         </Button>
-        {isHovered && (
-          <Button
-            className={`fadeBtn ${isHoveredLong && "up"}`}
-            onClick={handleClickDelete}
-          >
-            <DeleteIcon />
-          </Button>
+        {(isHovered || isEditing) && (
+          <Box className={`fadeBtns ${(isHoveredLong || isEditing) && "up"}`}>
+            <Button className="delete" onClick={handleClickDelete}>
+              <DeleteIcon />
+            </Button>
+            <Button className="edit" onClick={handleClickEdit}>
+              <EditIcon />
+            </Button>
+          </Box>
         )}
       </Card>
     </>

@@ -1,21 +1,25 @@
-import { useState } from "react";
-import useTimeout from "./useTimeout";
+import { useCallback, useMemo, useState } from "react";
 
-const useDebounce = (callback, time) => {
-  const [isAllowed, setIsAllowed] = useState(true);
-  const { setOut, clearOut } = useTimeout(() => {
-    setIsAllowed(true);
-  }, time);
-  const calling = () => {
-    if (isAllowed) {
-      callback();
-      setIsAllowed(false);
-    } else {
-      clearOut();
-    }
-    setOut();
-  };
-  return calling;
+const useDebounce = (ms) => {
+  const debouncer = useCallback(
+    (callback) => {
+      let isAllowed = true;
+      let timeoutIndex;
+      return () => {
+        if (isAllowed) {
+          callback();
+          isAllowed = false;
+        } else {
+          clearTimeout(timeoutIndex);
+        }
+        timeoutIndex = setTimeout(() => {
+          isAllowed = true;
+        }, ms);
+      };
+    },
+    [ms]
+  );
+  return debouncer;
 };
 
 export default useDebounce;

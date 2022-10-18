@@ -79,7 +79,7 @@ const todo = createSlice({
         ...action.payload,
       };
       state.data.push(newTodo);
-      state[action.payload.phase].push({ ...newTodo, inserted: Date.now() });
+      state[action.payload.phase].push(newTodo);
     },
     remove: (state, action) => {
       state.data = state.data.filter((todo) => todo.id !== action.payload.id);
@@ -134,13 +134,19 @@ const todo = createSlice({
 
     builder.addCase(patchTodo.fulfilled, (state, action) => {
       const index = state.data.findIndex((e) => e.id === action.payload.id);
-      const beforePhase = state.data[index].phase;
-      state[beforePhase] = state[beforePhase].filter(
-        (todo) => todo.id !== action.payload.id
-      );
-      state.data[index].phase = action.payload.phase;
-      const updatedTodo = state.data[index];
-      state[updatedTodo.phase].push({ ...updatedTodo, inserted: Date.now() });
+      const newTodo = { ...state.data[index], ...action.payload };
+      if (action.payload.phase) {
+        const beforePhase = state.data[index].phase;
+        state[beforePhase] = state[beforePhase].filter(
+          (todo) => todo.id !== action.payload.id
+        );
+        state[action.payload.phase].push(newTodo);
+      } else {
+        state[state.data[index].phase] = state[state.data[index].phase].map(
+          (todo) => (todo.id === action.payload.id ? newTodo : todo)
+        );
+      }
+      state.data[index] = newTodo;
     });
   },
 });

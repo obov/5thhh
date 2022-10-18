@@ -24,7 +24,7 @@ const Boards = () => {
           overflow: "hidden",
           padding: "4px",
           justifyContent: "center",
-          gap: "24px",
+          gap: "16px",
           "@media (max-width: 900px)": {
             flexDirection: "column",
             justifyContent: "flex-start",

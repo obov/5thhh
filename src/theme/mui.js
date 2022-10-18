@@ -12,6 +12,9 @@ export const theme = createTheme({
   components: {
     MuiCssBaseline: {
       styleOverrides: `
+        html {
+          scroll-behavior: smooth;
+        }
         ::-webkit-scrollbar {
           width: 8px; 
           height: 8px;
