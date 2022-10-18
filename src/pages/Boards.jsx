@@ -13,6 +13,7 @@ const Boards = () => {
   useLayoutEffect(() => {
     dispatch(getTodos());
   }, [dispatch]);
+  console.log("todos :", todos);
   return (
     <>
       <MainInput />

@@ -10,3 +10,12 @@ Content-Type: application/json; charset=UTF-8
 }
 ###
 DELETE  https://fifthhh.herokuapp.com/todos/1665997330734  HTTP/1.1
+###
+PATCH https://fifthhh.herokuapp.com/todos/222  HTTP/1.1
+Content-Type: application/json; charset=UTF-8
+
+{
+    "id": 222,
+    "title": "리액트 공부",
+    "phase": 3
+}

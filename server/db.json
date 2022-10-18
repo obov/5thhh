@@ -3,17 +3,20 @@
     {
       "id": 333,
       "title": "세계정복",
-      "phase": 1
+      "phase": 1,
+      "updated": 2
     },
     {
       "id": 222,
       "title": "리엑트 공부",
-      "phase": 2
+      "phase": 2,
+      "updated": 1
     },
     {
       "id": 111,
       "title": "우주평화",
-      "phase": 3
+      "phase": 3,
+      "updated": 0
     }
   ]
 }

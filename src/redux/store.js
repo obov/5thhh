@@ -14,7 +14,8 @@ const attachGroups = (initialTodos, phases) => {
     return pre;
   }, {});
   for (let todo of initialTodos) {
-    groups[todo.phase].push({ ...todo, inserted: Date.now() });
+    groups[todo.phase].push({ ...todo });
+    groups[todo.phase].sort((a, b) => a.updated - b.updated);
   }
   return { data: initialTodos, ...groups };
 };
@@ -50,7 +51,22 @@ export const deleteTodo = createAsyncThunk(
         method: "DELETE",
       })
     ).json();
-    return data;
+    return payload;
+  }
+);
+export const patchTodo = createAsyncThunk(
+  "todosReducer/patchTodo",
+  async (payload) => {
+    const data = await (
+      await fetch(apiBaseUrl + "todos/" + payload.id, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      })
+    ).json();
+    return payload;
   }
 );
 const todo = createSlice({
@@ -99,21 +115,32 @@ const todo = createSlice({
     });
 
     builder.addCase(postNewTodo.rejected, (state, action) => {
-      const newState = { ...state };
-      newState.data = state.data.filter(
+      state.data = state.data.filter((todo) => todo.id !== action.payload.id);
+      state[action.payload.phase] = state[action.payload.phase].filter(
         (todo) => todo.id !== action.payload.id
       );
-      newState[action.payload.phase] = state[action.payload.phase].filter(
-        (todo) => todo.id !== action.payload.id
-      );
-      return newState;
     });
 
+    builder.addCase(deleteTodo.fulfilled, (state, action) => {
+      state.data = state.data.filter((todo) => todo.id !== action.payload.id);
+      state[action.payload.phase] = state[action.payload.phase].filter(
+        (todo) => todo.id !== action.payload.id
+      );
+    });
     builder.addCase(deleteTodo.rejected, (state, action) => {
-      const newState = { ...state };
       state.data.push(action.payload);
       state[action.payload.phase].push(action.payload);
-      return newState;
+    });
+
+    builder.addCase(patchTodo.fulfilled, (state, action) => {
+      const index = state.data.findIndex((e) => e.id === action.payload.id);
+      const beforePhase = state.data[index].phase;
+      state[beforePhase] = state[beforePhase].filter(
+        (todo) => todo.id !== action.payload.id
+      );
+      state.data[index].phase = action.payload.phase;
+      const updatedTodo = state.data[index];
+      state[updatedTodo.phase].push({ ...updatedTodo, inserted: Date.now() });
     });
   },
 });

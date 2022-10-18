@@ -3,7 +3,7 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch } from "react-redux";
-import { up, down, remove, deleteTodo } from "../redux/store";
+import { up, down, deleteTodo, patchTodo } from "../redux/store";
 import { useState } from "react";
 import useTimeout from "../hooks/useTimeout";
 import useDebounce from "../hooks/useDebounce";
@@ -16,27 +16,29 @@ const Todo = ({ title, phase, id }) => {
   const { setOut, clearOut } = useTimeout(() => {
     setIsHoveredLong(true);
   }, 2000);
-  const { setOut: setOutRemove } = useTimeout(() => {
-    dispatch(remove({ id, phase }));
-  }, 300);
   const { setOut: setOutDelete } = useTimeout(() => {
     dispatch(deleteTodo({ id, phase }));
   }, 300);
-  const debouncedRemove = useDebounce(() => {
-    setOutRemove();
-  }, 300);
   const debouncedDelete = useDebounce(() => {
     setOutDelete();
-  }, 300);
+  }, 1000);
 
+  const handleMouseEnder = () => {
+    setIsHovered(true);
+    setOut();
+  };
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    clearOut();
+    setIsHoveredLong(false);
+  };
   const handleAnimationEndLeft = () => {
-    dispatch(down({ id, phase }));
+    dispatch(patchTodo({ id, phase: phase - 1 }));
   };
   const handleAnimationEndRight = () => {
-    dispatch(up({ id, phase }));
+    dispatch(patchTodo({ id, phase: phase + 1 }));
   };
   const handleClickDelete = () => {
-    debouncedRemove();
     debouncedDelete();
   };
 
@@ -87,15 +89,8 @@ const Todo = ({ title, phase, id }) => {
             transform: "translate(-50%,-30px)",
           },
         }}
-        onMouseEnter={() => {
-          setIsHovered(true);
-          setOut();
-        }}
-        onMouseLeave={() => {
-          setIsHovered(false);
-          clearOut();
-          setIsHoveredLong(false);
-        }}
+        onMouseEnter={handleMouseEnder}
+        onMouseLeave={handleMouseLeave}
       >
         <Button
           className="btn"
