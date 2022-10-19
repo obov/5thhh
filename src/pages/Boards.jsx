@@ -17,8 +17,6 @@ const Boards = () => {
   console.log("todos :", todos);
   return (
     <>
-      
-
       <MainInput />
       <Box
         sx={{
