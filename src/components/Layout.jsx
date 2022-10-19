@@ -1,17 +1,18 @@
 import { Box } from "@mui/material";
 import Container from "@mui/material/Container";
 import { useSelector } from "react-redux";
+import useSum from "../hooks/useSum";
 import Header from "./Header";
 
 const Layout = ({ children }) => {
+  const sum = useSum();
   const todos = useSelector((state) => state.todos);
   const phases = JSON.parse(process.env.REACT_APP_PHASES);
-  let sum = 0;
-  for (let phase of phases) {
-    if (Math.min(todos[phase.num].length - 2, 3) > 0) {
-      sum += Math.min(todos[phase.num].length - 2, 3);
-    }
-  }
+  // for (let phase of phases) {
+  //   if (Math.min(todos[phase.num].length - 2, 3) > 0) {
+  //     sum += Math.min(todos[phase.num].length - 2, 3);
+  //   }
+  // }
   return (
     <Box
       sx={{
@@ -24,6 +25,7 @@ const Layout = ({ children }) => {
       <Container
         fixed
         sx={{
+          paddingTop: "120px",
           display: "flex",
           flexDirection: "column",
           justifyContent: "flex-start",
@@ -32,7 +34,6 @@ const Layout = ({ children }) => {
           gap: "10px",
           height: "100vh",
           minHeight: "800px",
-          boxShadow: "0 3px 8px rgba(0,0,0,0.3)",
           "@media (max-width: 900px)": {
             height: `calc( max(100vh , 800px) + ${
               Math.max(0, sum - 1) * 80

@@ -1,6 +1,7 @@
 {
   "todos": [
-    { "id": 333, "title": "세계정복", "phase": 1 },
+    { "id": 111, "title": "우주 평화", "phase": 1, "commentIds": [] },
     { "id": 222, "title": "리엑트 공부", "phase": 2 }
-  ]
+  ],
+  "comment": [{ "id": 123, "content": "wow","todoId":111 }]
 }

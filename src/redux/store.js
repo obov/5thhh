@@ -24,6 +24,7 @@ const setStatus = (state, status) => ({ ...state, status });
 
 export const getTodos = createAsyncThunk("todosReducer/getTodos", async () => {
   const data = await (await fetch(apiBaseUrl + "todos")).json();
+  console.log(data);
   return data;
 });
 

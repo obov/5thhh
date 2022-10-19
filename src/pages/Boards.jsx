@@ -5,6 +5,7 @@ import MainInput from "../components/MainInput";
 import { useLayoutEffect } from "react";
 import { getTodos } from "../redux/store";
 import Spinner from "../components/Spinner";
+import Logo from "../logo/svg";
 
 const Boards = () => {
   const dispatch = useDispatch();
@@ -16,6 +17,8 @@ const Boards = () => {
   console.log("todos :", todos);
   return (
     <>
+      
+
       <MainInput />
       <Box
         sx={{

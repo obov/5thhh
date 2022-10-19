@@ -57,14 +57,17 @@ const Todo = ({ title, phase, id }) => {
   const handleClickDelete = () => {
     deletDebounced();
   };
+
   const handleClickEdit = () => {
     setIsEditing(true);
   };
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsEditing(false);
-    setTodoTitle(newTitle);
-    dispatch(patchTodo({ id, title: newTitle }));
+    if (newTitle !== todoTitle) {
+      setTodoTitle(newTitle);
+      dispatch(patchTodo({ id, title: newTitle }));
+    }
   };
   const handleChangeNewTitle = ({ target }) => {
     setNewTitle(target.value);
@@ -83,6 +86,7 @@ const Todo = ({ title, phase, id }) => {
       <Card
         sx={{
           width: "100%",
+          maxWidth: "100%",
           minHeight: 64,
           display: "flex",
           alignItems: "center",
@@ -110,27 +114,41 @@ const Todo = ({ title, phase, id }) => {
           "&:hover .btn .arrow": {
             color: "rgba(0,0,0,0.7)",
           },
-          ".editInput": { transform: "translateY(-14px)", width: "80%" },
+          ".editForm": {
+            transform: "translateY(-14px)",
+            width: "100%",
+            ".editInput": { width: "100%" },
+          },
           ".title": {
+            width: "100%",
             transition: "0.5s",
             textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
             overflow: "hidden",
             cursor: "pointer",
             padding: "2px",
-            borderRadius: "5px",
-          },
-          ".title:hover": {
-            backgroundColor: "rgba(0,0,0,0.1)",
+            borderRadius: "12px",
+            "&:hover": {
+              backgroundColor: "rgba(0,0,0,0.1)",
+            },
+            ".span": {
+              textOverflow: "ellipsis",
+              textAlign: "center",
+              width: "100%",
+              maxWidth: "100%",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+            },
+            "@media (max-width: 900px)": { width: "50%", marginX: "auto" },
           },
           "&:hover .title.up": {
             transform: "translateY(-14px)",
           },
           ".fadeBtns": {
-            width: "100%",
+            width: "50%",
             height: "36px",
             display: "flex",
             justifyContent: "center",
+            gap: "4px",
             transition: "0.5s",
             position: "absolute",
             top: "60px",
@@ -148,6 +166,7 @@ const Todo = ({ title, phase, id }) => {
             "&.up": {
               transform: "translate(-50%,-28px)",
             },
+            "@media (max-width: 900px)": { gap: "12px" },
           },
         }}
         onMouseEnter={handleMouseEnder}
@@ -161,12 +180,12 @@ const Todo = ({ title, phase, id }) => {
           <KeyboardArrowLeftIcon className="arrow" />
         </Button>
         {isEditing ? (
-          <Box className="editInput" component="form" onSubmit={handleSubmit}>
+          <Box className="editForm" component="form" onSubmit={handleSubmit}>
             <TextField
+              className="editInput"
               value={newTitle}
               onChange={handleChangeNewTitle}
               onBlur={handleBlur}
-              id="standard-basic"
               label={null}
               variant="standard"
               ref={inputRef}
@@ -174,7 +193,7 @@ const Todo = ({ title, phase, id }) => {
           </Box>
         ) : (
           <Box className={`title ${(isHoveredLong || isEditing) && "up"}`}>
-            {todoTitle}
+            <Box className="span">{todoTitle}</Box>
           </Box>
         )}
         <Button
