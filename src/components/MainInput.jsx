@@ -74,7 +74,7 @@ const MainInput = () => {
 
   return (
     <>
-      {isModal.now ? <Modal onClick={handleClickModalBack} /> : null}
+      {isModal.now ? <Modal portal onClick={handleClickModalBack} /> : null}
       <Box
         sx={{
           width: "100%",

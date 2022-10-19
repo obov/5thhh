@@ -1,13 +1,13 @@
 import { Box, Card, TextField } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
-import { deleteTodo, patchTodo, removeRef } from "../redux/store";
+import { useDispatch } from "react-redux";
+import { deleteTodo, patchTodo } from "../redux/store";
 import { useState } from "react";
 import useTimeout from "../hooks/useTimeout";
 import useDebounce from "../hooks/useDebounce";
 import { useRef } from "react";
 import { useEffect } from "react";
 import btnFather from "./btnFather";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Todo = ({ title, phase, id }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -16,7 +16,7 @@ const Todo = ({ title, phase, id }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [todoTitle, setTodoTitle] = useState(title);
   const [newTitle, setNewTitle] = useState(todoTitle);
-  const inputRef = useRef(undefined);
+  const inputRef = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleClick = () => {

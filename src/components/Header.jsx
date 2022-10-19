@@ -1,9 +1,7 @@
 import { Box } from "@mui/material";
 import Logo from "../logo/svg";
-import useSum from "../hooks/useSum";
 
 const Header = () => {
-  const sum = useSum();
   return (
     <Box
       sx={{
