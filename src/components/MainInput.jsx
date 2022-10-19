@@ -90,6 +90,9 @@ const MainInput = () => {
         sx={{
           width: "100%",
           minHeight: "80px",
+          position: "sticky",
+          top: 12,
+          zIndex: 11,
         }}
         onFocus={handleFocus}
         onClick={handleClick}
@@ -97,7 +100,7 @@ const MainInput = () => {
         <Card
           sx={{
             display: "flex",
-            width: "70%",
+            width: "65%",
             marginX: "auto",
             minHeight: "80px",
             padding: "0 24px 0 16px",
@@ -108,12 +111,13 @@ const MainInput = () => {
               width: "95%",
               minWidth: "280px",
             },
-            position: isModal.now ? "relative" : "static",
-            zIndex: isModal.now ? 11 : 0,
+            borderRadius: "12px",
+            border: isModal.now
+              ? "2px solid transparent"
+              : "2px solid rgba(0,0,0,0.5)",
             boxShadow: isModal.now
               ? "0 6px 32px rgba(255,255,255,1),0 3px 16px rgba(255,255,255,1)"
               : "",
-            top: isModal.move && "50%",
             transform: isModal.move && "translateY(50%)",
             transition: isModal.transition && "0.3s",
           }}

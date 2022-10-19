@@ -1,12 +1,11 @@
-import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
+import {  Box } from "@mui/material";
 import Logo from "../logo/svg";
 import useSum from "../hooks/useSum";
 
 const Header = () => {
   const sum = useSum();
   return (
-    <Box sx={{ position: "relative", top: -130 }}>
+    <Box sx={{ position: "relative", top: -100 }}>
       <Box
         sx={{
           position: "absolute",

@@ -1,18 +1,10 @@
 import { Box } from "@mui/material";
 import Container from "@mui/material/Container";
-import { useSelector } from "react-redux";
 import useSum from "../hooks/useSum";
 import Header from "./Header";
 
 const Layout = ({ children }) => {
   const sum = useSum();
-  const todos = useSelector((state) => state.todos);
-  const phases = JSON.parse(process.env.REACT_APP_PHASES);
-  // for (let phase of phases) {
-  //   if (Math.min(todos[phase.num].length - 2, 3) > 0) {
-  //     sum += Math.min(todos[phase.num].length - 2, 3);
-  //   }
-  // }
   return (
     <Box
       sx={{
@@ -25,7 +17,7 @@ const Layout = ({ children }) => {
       <Container
         fixed
         sx={{
-          paddingTop: "120px",
+          paddingTop: "100px",
           display: "flex",
           flexDirection: "column",
           justifyContent: "flex-start",
