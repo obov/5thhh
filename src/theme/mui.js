@@ -27,6 +27,19 @@ export const theme = createTheme({
           background-color: rgba(20, 20, 20, 0.3);
           box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.6);
         }
+
+
+        @keyframes gradient {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
         @keyframes fadeIn{
           from {
             transform: translateX(-100px);

@@ -26,7 +26,25 @@ const Todo = ({ title, phase, id }) => {
   }, 1200);
 
   const debouncer = useDebounce(1000);
+  const dispatchDebounced = useRef(
+    debouncer((action) => {
+      dispatch(action);
+    })
+  ).current;
 
+  const logDebounced = useRef(debouncer(console.log)).current;
+
+  const handleClickPrev = () => {
+    dispatchDebounced(patchTodo({ id, phase: phase - 1, updated: Date.now() }));
+  };
+  const handleClickNext = () => {
+    dispatchDebounced(patchTodo({ id, phase: phase + 1, updated: Date.now() }));
+    logDebounced(10, 10);
+  };
+
+  const handleClickDelete = () => {
+    dispatchDebounced(deleteTodo({ id, phase }));
+  };
   const handleMouseEnder = () => {
     setIsHovered(true);
     setOut();
@@ -36,28 +54,6 @@ const Todo = ({ title, phase, id }) => {
     clearOut();
     setIsHoveredLong(false);
   };
-
-  const patchPrevDebounced = debouncer(() => {
-    dispatch(patchTodo({ id, phase: phase - 1, updated: Date.now() }));
-  });
-  const handleClickPrev = () => {
-    patchPrevDebounced();
-  };
-
-  const patchNextDebounced = debouncer(() => {
-    dispatch(patchTodo({ id, phase: phase + 1, updated: Date.now() }));
-  });
-  const handleClickNext = () => {
-    patchNextDebounced();
-  };
-
-  const deletDebounced = debouncer(() => {
-    dispatch(deleteTodo({ id, phase }));
-  });
-  const handleClickDelete = () => {
-    deletDebounced();
-  };
-
   const handleClickEdit = () => {
     setIsEditing(true);
   };

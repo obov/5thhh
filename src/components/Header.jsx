@@ -1,9 +1,10 @@
-import {  Box } from "@mui/material";
+import { Box } from "@mui/material";
 import Logo from "../logo/svg";
 import useSum from "../hooks/useSum";
 
 const Header = () => {
   const sum = useSum();
+  console.log(sum);
   return (
     <Box sx={{ position: "relative", top: -100 }}>
       <Box
@@ -11,7 +12,7 @@ const Header = () => {
           position: "absolute",
           height: 100,
           width: `calc(100vw - ${
-            (Math.max(0, sum - 3) || window.innerHeight < 800) && 8
+            Math.max(0, sum - 3) || window.innerHeight < 800 ? 8 : 0
           }px)`,
           backgroundColor: "#11111f",
           overflow: "hidden",

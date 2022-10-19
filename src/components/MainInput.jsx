@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { add, postNewTodo, setPhase, setRef } from "../redux/store";
+import Modal from "./Modal";
 
 const MainInput = () => {
   const dispatch = useDispatch();
@@ -71,28 +72,14 @@ const MainInput = () => {
   }, [isModal.move]);
   return (
     <>
-      {isModal.now ? (
-        <Box
-          sx={{
-            width: "100vw",
-            height: "100vh",
-            backgroundColor: "rgba(0,0,0,0.3)",
-            position: "fixed",
-            top: 0,
-            left: 0,
-            zIndex: 10,
-            backdropFilter: "blur(3px)",
-          }}
-          onClick={handleClickModalBack}
-        />
-      ) : null}
+      {isModal.now ? <Modal portal onClick={handleClickModalBack} /> : null}
       <Box
         sx={{
           width: "100%",
           minHeight: "80px",
           position: "sticky",
           top: 12,
-          zIndex: 11,
+          zIndex: 1,
         }}
         onFocus={handleFocus}
         onClick={handleClick}
@@ -173,6 +160,7 @@ const MainInput = () => {
               variant="standard"
               ref={inputRef}
               autoComplete="off"
+              required
             />
           </Box>
         </Card>

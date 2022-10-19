@@ -11,7 +11,9 @@ const Layout = ({ children }) => {
         width: `calc(100vw - ${
           (Math.max(0, sum - 3) || window.innerHeight < 800) && 8
         }px)`,
-        backgroundColor: "rgba(200,200,200,0.7)",
+        background: "linear-gradient(-45deg, #9599E2, #FB927E,#F7CE68,#8BC6EC)",
+        backgroundSize: "400% 400%",
+        animation: "gradient 15s ease infinite",
       }}
     >
       <Container
@@ -22,7 +24,7 @@ const Layout = ({ children }) => {
           flexDirection: "column",
           justifyContent: "flex-start",
           alignItems: "center",
-          backgroundColor: "rgb(240,240,240)",
+          backgroundColor: "rgba(240,240,240,0.6)",
           gap: "10px",
           height: "100vh",
           minHeight: "800px",

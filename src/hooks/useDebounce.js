@@ -1,13 +1,13 @@
-import { useCallback } from "react";
+import { useCallback, useMemo, useRef } from "react";
 
 const useDebounce = (ms) => {
   const debouncer = useCallback(
     (callback) => {
       let isAllowed = true;
       let timeoutIndex;
-      return () => {
+      return (...params) => {
         if (isAllowed) {
-          callback();
+          callback(...params);
           isAllowed = false;
         } else {
           clearTimeout(timeoutIndex);
