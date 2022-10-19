@@ -25,7 +25,7 @@ const MainInput = () => {
   const handleChangeTitle = ({ target }) => {
     setNewTodoTitle(target.value);
   };
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     const newDate = Date.now();
     const newTodo = {
@@ -54,6 +54,7 @@ const MainInput = () => {
     if (!isModal.move) return;
     setIsModal({ now: true, move: false, transition: true });
   };
+
   useEffect(() => {
     dispatch(setRef(inputRef));
   }, [dispatch]);
@@ -64,22 +65,23 @@ const MainInput = () => {
   }, [isModal.now]);
   useEffect(() => {
     if (!isModal.move) {
-      setTimeout(
-        () => setIsModal({ now: false, move: false, transition: false }),
-        200
-      );
+      setTimeout(() => {
+        setIsModal({ now: false, move: false, transition: false });
+        setNewTodoTitle("");
+      }, 200);
     }
   }, [isModal.move]);
+
   return (
     <>
-      {isModal.now ? <Modal portal onClick={handleClickModalBack} /> : null}
+      {isModal.now ? <Modal onClick={handleClickModalBack} /> : null}
       <Box
         sx={{
           width: "100%",
           minHeight: "80px",
           position: "sticky",
           top: 12,
-          zIndex: 1,
+          zIndex: 2,
         }}
         onFocus={handleFocus}
         onClick={handleClick}
@@ -94,10 +96,7 @@ const MainInput = () => {
             justifyContent: "center",
             alignItems: "center",
             gap: "8px",
-            "@media (max-width: 600px)": {
-              width: "95%",
-              minWidth: "280px",
-            },
+            backgroundColor: isModal.now ? "white" : "rgb(248,248,248)",
             borderRadius: "12px",
             border: isModal.now
               ? "2px solid transparent"
@@ -107,17 +106,38 @@ const MainInput = () => {
               : "",
             transform: isModal.move && "translateY(50%)",
             transition: isModal.transition && "0.3s",
-          }}
-        >
-          <FormControl
-            sx={{
+            "@media (max-width: 600px)": {
+              width: "95%",
+              minWidth: "280px",
+            },
+            ".selectWrapper": {
               m: 1,
               flexGrow: 0,
-            }}
-          >
+              ".select": {
+                minWidth: "48px",
+                maxWidth: "48px",
+                minHeight: "48px",
+                ".color": {
+                  width: "24px",
+                  height: "24px",
+                  marginX: "auto",
+                },
+              },
+            },
+            ".form": {
+              display: "flex",
+              gap: "6px",
+              flexGrow: 2,
+              ".input": {
+                width: "100%",
+              },
+            },
+          }}
+        >
+          <FormControl className="selectWrapper">
             <Select
               value={phaseNum}
-              sx={{ minWidth: "48px", maxWidth: "48px", minHeight: "48px" }}
+              className="select"
               onChange={handleChangePhase}
               displayEmpty
               inputProps={{
@@ -135,10 +155,8 @@ const MainInput = () => {
               {phases.map((phase) => (
                 <MenuItem key={phase.num} value={phase.num}>
                   <Card
+                    className="color"
                     sx={{
-                      width: "24px",
-                      height: "24px",
-                      marginX: "auto",
                       backgroundColor: phase.color,
                     }}
                   />
@@ -146,20 +164,17 @@ const MainInput = () => {
               ))}
             </Select>
           </FormControl>
-          <Box
-            sx={{ display: "flex", gap: "6px", flexGrow: 2 }}
-            component="form"
-            onSubmit={handleSubmit}
-          >
+          <Box className="form" component="form" onSubmit={handleSubmit}>
             <TextField
               value={newTodoTitle}
-              sx={{ width: "100%" }}
+              className="input"
               onChange={handleChangeTitle}
               id="standard-basic"
               label={phases.find((phase) => phase.num === phaseNum).name}
               variant="standard"
               ref={inputRef}
               autoComplete="off"
+              placeholder="This is your next to do"
               required
             />
           </Box>

@@ -1,4 +1,4 @@
-import { ThemeProvider } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
@@ -9,11 +9,12 @@ import { theme } from "./theme/mui";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <ThemeProvider theme={theme}>
-    <BrowserRouter>
+  <BrowserRouter>
+    <ThemeProvider theme={theme}>
       <Provider store={store}>
+        <CssBaseline />
         <App />
       </Provider>
-    </BrowserRouter>
-  </ThemeProvider>
+    </ThemeProvider>
+  </BrowserRouter>
 );

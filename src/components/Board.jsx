@@ -1,9 +1,9 @@
-import { Button, Card } from "@mui/material";
+import { Card } from "@mui/material";
 import Todo from "./Todo";
-import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import { setPhase } from "../redux/store";
 import { Box } from "@mui/system";
+import btnFather from "./btnFather";
 
 const Board = ({ phase, todos }) => {
   const { color, num, name } = phase;
@@ -25,6 +25,7 @@ const Board = ({ phase, todos }) => {
         gap: "16px",
         maxHeight: "80vh",
         animation: "fadeIn 0.8s",
+        boxShadow: "0 4px 16px white",
         "@media (max-width: 900px)": {
           paddingX: "8px",
           flexDirection: "row",
@@ -33,17 +34,14 @@ const Board = ({ phase, todos }) => {
               ? todos.length < 6
                 ? todos.length * 60
                 : 300
-              : 120
+              : 124
           }px`,
           flex: 0,
         },
-      }}
-    >
-      <Card
-        sx={{
+        ".name": {
           backgroundColor: color,
-          width: "95%",
-          height: 100,
+          width: "60%",
+          height: 80,
           margin: "0 auto",
           borderRadius: "24px",
           display: "flex",
@@ -51,23 +49,17 @@ const Board = ({ phase, todos }) => {
           justifyContent: "center",
           "@media (max-width: 900px)": {
             width: "20%",
+            minWidth: "58px",
             height: "100%",
           },
-        }}
-      >
-        {name}
-      </Card>
-      <Box
-        sx={{
+        },
+        ".posterWrapper": {
           width: "95%",
           overflow: "hidden",
           padding: "2px",
           height: "100%",
           marginX: "0 auto",
-        }}
-      >
-        <Box
-          sx={{
+          ".todoPoster": {
             width: "100%",
             paddingY: "12px",
             display: "flex",
@@ -76,20 +68,13 @@ const Board = ({ phase, todos }) => {
             gap: "16px",
             overflowY: "auto",
             height: "100%",
-            backgroundColor: "rgb(245,245,245)",
+            backgroundColor: "rgb(236,236,236)",
             borderRadius: "12px",
             paddingX: "12px",
             "@media (max-width: 900px)": {},
-          }}
-        >
-          {todos?.map((todo) => (
-            <Todo key={todo.id} {...todo} />
-          ))}
-        </Box>
-      </Box>
-      <Button
-        onClick={handleClick}
-        sx={{
+          },
+        },
+        ".plus": {
           boxShadow: "1px 1px 1px transparent",
           color: "rgba(0,0,0,0.3)",
           borderRadius: "26px",
@@ -102,10 +87,18 @@ const Board = ({ phase, todos }) => {
             boxShadow: "1px 1px 1px rgba(0,0,0,0.3)",
             color: "rgba(0,0,0,0.8)",
           },
-        }}
-      >
-        <AddOutlinedIcon />
-      </Button>
+        },
+      }}
+    >
+      <Card className="name">{name}</Card>
+      <Box className="posterWrapper">
+        <Box className="todoPoster">
+          {todos?.map((todo) => (
+            <Todo key={todo.id} {...todo} />
+          ))}
+        </Box>
+      </Box>
+      <btnFather.Plus onClick={handleClick} className="plus" />
     </Card>
   );
 };

@@ -1,15 +1,13 @@
-import { Box, Button, Card, TextField } from "@mui/material";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import { useDispatch } from "react-redux";
-import { deleteTodo, patchTodo } from "../redux/store";
+import { Box, Card, TextField } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteTodo, patchTodo, removeRef } from "../redux/store";
 import { useState } from "react";
 import useTimeout from "../hooks/useTimeout";
 import useDebounce from "../hooks/useDebounce";
 import { useRef } from "react";
 import { useEffect } from "react";
+import btnFather from "./btnFather";
+import { Link, useNavigate } from "react-router-dom";
 
 const Todo = ({ title, phase, id }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -18,14 +16,18 @@ const Todo = ({ title, phase, id }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [todoTitle, setTodoTitle] = useState(title);
   const [newTitle, setNewTitle] = useState(todoTitle);
-  const inputRef = useRef(null);
+  const inputRef = useRef(undefined);
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate(`/${id}`);
+  };
   const { setOut, clearOut } = useTimeout(() => {
     setIsHoveredLong(true);
   }, 1200);
 
   const debouncer = useDebounce(1000);
+
   const dispatchDebounced = useRef(
     debouncer((action) => {
       dispatch(action);
@@ -90,30 +92,20 @@ const Todo = ({ title, phase, id }) => {
           borderRadius: "24px",
           paddingX: "2px",
           position: "relative",
-          ".btn": {
-            maxWidth: "30px",
-            maxHeight: "30px",
-            minWidth: "30px",
-            minHeight: "30px",
-            borderRadius: "15px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            position: "relative",
-          },
-          ".btn:hover": {
-            backgroundColor: "rgba(0,0,0,0.1)",
-          },
-          ".btn .arrow": {
-            color: "transparent",
-          },
-          "&:hover .btn .arrow": {
-            color: "rgba(0,0,0,0.7)",
-          },
-          ".editForm": {
-            transform: "translateY(-14px)",
-            width: "100%",
-            ".editInput": { width: "100%" },
+          backgroundColor: "rgb(250,250,250)",
+          boxShadow: "0 0 3px rgba(0,0,0,0.1)",
+          "&:hover": {
+            boxShadow: "0 0 4px white",
+            backgroundColor: "white",
+            ".title": {
+              color: "rgb(15,15,15)",
+            },
+            ".title.up": {
+              transform: "translateY(-14px)",
+            },
+            ".btn .arrow": {
+              color: "rgba(0,0,0,0.7)",
+            },
           },
           ".title": {
             width: "100%",
@@ -123,8 +115,9 @@ const Todo = ({ title, phase, id }) => {
             cursor: "pointer",
             padding: "2px",
             borderRadius: "12px",
+            color: "rgb(80,80,80)",
             "&:hover": {
-              backgroundColor: "rgba(0,0,0,0.1)",
+              backgroundColor: "rgb(236,236,236)",
             },
             ".span": {
               textOverflow: "ellipsis",
@@ -136,9 +129,31 @@ const Todo = ({ title, phase, id }) => {
             },
             "@media (max-width: 900px)": { width: "50%", marginX: "auto" },
           },
-          "&:hover .title.up": {
-            transform: "translateY(-14px)",
+
+          ".btn": {
+            maxWidth: "24px",
+            maxHeight: "24px",
+            minWidth: "24px",
+            minHeight: "24px",
+            borderRadius: "12px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "relative",
+            "&:hover": {
+              backgroundColor: "rgb(236,236,236)",
+            },
+            ".arrow": {
+              color: "transparent",
+            },
           },
+
+          ".editForm": {
+            transform: "translateY(-14px)",
+            width: "100%",
+            ".editInput": { width: "100%" },
+          },
+
           ".fadeBtns": {
             width: "50%",
             height: "36px",
@@ -168,13 +183,12 @@ const Todo = ({ title, phase, id }) => {
         onMouseEnter={handleMouseEnder}
         onMouseLeave={handleMouseLeave}
       >
-        <Button
+        <btnFather.LeftArrow
           className="btn"
           disabled={phase === 1}
           onClick={handleClickPrev}
-        >
-          <KeyboardArrowLeftIcon className="arrow" />
-        </Button>
+          iconClassName="arrow"
+        />
         {isEditing ? (
           <Box className="editForm" component="form" onSubmit={handleSubmit}>
             <TextField
@@ -185,28 +199,27 @@ const Todo = ({ title, phase, id }) => {
               label={null}
               variant="standard"
               ref={inputRef}
+              autoComplete="off"
+              spellCheck="false"
             />
           </Box>
         ) : (
           <Box className={`title ${(isHoveredLong || isEditing) && "up"}`}>
-            <Box className="span">{todoTitle}</Box>
+            <Box className="span" onClick={handleClick}>
+              {todoTitle}
+            </Box>
           </Box>
         )}
-        <Button
+        <btnFather.RightArrow
           className="btn"
           disabled={phase === 4}
           onClick={handleClickNext}
-        >
-          <KeyboardArrowRightIcon className="arrow" />
-        </Button>
+          iconClassName="arrow"
+        />
         {(isHovered || isEditing) && (
           <Box className={`fadeBtns ${(isHoveredLong || isEditing) && "up"}`}>
-            <Button className="delete" onClick={handleClickDelete}>
-              <DeleteIcon />
-            </Button>
-            <Button className="edit" onClick={handleClickEdit}>
-              <EditIcon />
-            </Button>
+            <btnFather.Delete className="delete" onClick={handleClickDelete} />
+            <btnFather.Edit className="edit" onClick={handleClickEdit} />
           </Box>
         )}
       </Card>

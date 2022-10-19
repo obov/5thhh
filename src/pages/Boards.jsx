@@ -5,7 +5,7 @@ import MainInput from "../components/MainInput";
 import { useLayoutEffect } from "react";
 import { getTodos } from "../redux/store";
 import Spinner from "../components/Spinner";
-import Logo from "../logo/svg";
+import { Link } from "react-router-dom";
 
 const Boards = () => {
   const dispatch = useDispatch();
@@ -23,7 +23,7 @@ const Boards = () => {
           width: "100%",
           display: "flex",
           overflow: "hidden",
-          padding: "4px",
+          padding: "20px",
           justifyContent: "center",
           gap: "16px",
           "@media (max-width: 900px)": {

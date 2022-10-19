@@ -15,9 +15,13 @@ export const theme = createTheme({
         html {
           scroll-behavior: smooth;
         }
+        *{
+          font-weight:600
+        }
         ::-webkit-scrollbar {
           width: 8px; 
           height: 8px;
+          display: none;
         }
         ::-webkit-scrollbar-track {
           background-color: transparent;

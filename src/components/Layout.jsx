@@ -8,17 +8,11 @@ const Layout = ({ children }) => {
   return (
     <Box
       sx={{
-        width: `calc(100vw - ${
-          (Math.max(0, sum - 3) || window.innerHeight < 800) && 8
-        }px)`,
+        width: "100vw",
         background: "linear-gradient(-45deg, #9599E2, #FB927E,#F7CE68,#8BC6EC)",
         backgroundSize: "400% 400%",
         animation: "gradient 15s ease infinite",
-      }}
-    >
-      <Container
-        fixed
-        sx={{
+        ".container": {
           paddingTop: "100px",
           display: "flex",
           flexDirection: "column",
@@ -29,12 +23,12 @@ const Layout = ({ children }) => {
           height: "100vh",
           minHeight: "800px",
           "@media (max-width: 900px)": {
-            height: `calc( max(100vh , 800px) + ${
-              Math.max(0, sum - 1) * 80
-            }px)`,
+            height: `calc( max(100vh , 820px) + ${Math.max(0, sum) * 72}px)`,
           },
-        }}
-      >
+        },
+      }}
+    >
+      <Container fixed className="container">
         <Header />
         {children}
       </Container>

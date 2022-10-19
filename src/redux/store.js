@@ -24,7 +24,6 @@ const setStatus = (state, status) => ({ ...state, status });
 
 export const getTodos = createAsyncThunk("todosReducer/getTodos", async () => {
   const data = await (await fetch(apiBaseUrl + "todos")).json();
-  console.log(data);
   return data;
 });
 
@@ -161,12 +160,12 @@ const inputRef = createSlice({
   initialState: initialRef,
   reducers: {
     setRef: (state, action) => {
-      return action.payload;
+      return { ...action.payload };
     },
   },
 });
 
-export const { setRef } = inputRef.actions;
+export const { setRef, removeRef } = inputRef.actions;
 
 const initialPhase = 1;
 
