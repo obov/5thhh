@@ -10,7 +10,8 @@ import { useRef } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { add, postNewTodo, setPhase, setRef } from "../redux/store";
+import { add, postNewTodo } from "../redux/modules/todoReducer";
+import { setPhase, setRef } from "../redux/store";
 import Modal from "./Modal";
 
 const MainInput = () => {
@@ -153,10 +154,17 @@ const MainInput = () => {
               }}
             >
               {phases.map((phase) => (
-                <MenuItem key={phase.num} value={phase.num}>
+                <MenuItem
+                  sx={{ transform: "translateY(10px)" }}
+                  key={phase.num}
+                  value={phase.num}
+                >
                   <Card
                     className="color"
                     sx={{
+                      width: "24px",
+                      height: "24px",
+                      marginX: "auto",
                       backgroundColor: phase.color,
                     }}
                   />
@@ -169,7 +177,6 @@ const MainInput = () => {
               value={newTodoTitle}
               className="input"
               onChange={handleChangeTitle}
-              id="standard-basic"
               label={phases.find((phase) => phase.num === phaseNum).name}
               variant="standard"
               ref={inputRef}

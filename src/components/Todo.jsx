@@ -1,6 +1,6 @@
 import { Box, Card, TextField } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { deleteTodo, patchTodo } from "../redux/store";
+import { deleteTodo, patchTodo } from "../redux/modules/todoReducer";
 import { useState } from "react";
 import useTimeout from "../hooks/useTimeout";
 import useDebounce from "../hooks/useDebounce";

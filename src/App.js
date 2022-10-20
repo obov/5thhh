@@ -11,7 +11,7 @@ function App() {
     <Layout>
       <Routes>
         <Route index element={<Boards />} />
-        <Route path=":id" element={<Detail />} />; ;
+        <Route path=":id" element={<Detail />} />
       </Routes>
     </Layout>
   );

@@ -18,5 +18,12 @@
       "phase": 3,
       "updated": 0
     }
+  ],
+  "comments": [
+    {
+      "id": 111,
+      "body": "좋아요",
+      "todoId": 333
+    }
   ]
 }

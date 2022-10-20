@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Board from "../components/Board";
 import MainInput from "../components/MainInput";
 import { useLayoutEffect } from "react";
-import { getTodos } from "../redux/store";
+import { getTodos } from "../redux/modules/todoReducer";
 import Spinner from "../components/Spinner";
 import { Link } from "react-router-dom";
 

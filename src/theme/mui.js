@@ -54,6 +54,42 @@ export const theme = createTheme({
             opacity: 1;
           }
         }
+        @keyframes boing{
+  0%, 100% {
+    transform: translateY(0px);
+    animation-timing-function: ease-out;
+  }
+  50% {
+    transform: translateY(-30px);
+    animation-timing-function: ease-in;
+    opacity: 0.5;
+  }
+  
+}
+#dot6{
+    animation: boing 1s infinite;
+}
+#dot7{
+    animation: boing 1s ease-out;
+    animation-iteration-count: infinite;
+    animation-delay: 0.2s;
+}
+#dot8{
+    animation: boing 1s ease-out;
+    animation-iteration-count: infinite;
+    animation-delay: 0.4s;
+}
+#dot9{
+    animation: boing 1s ease-out;
+    animation-iteration-count: infinite;
+    animation-delay: 0.6s;
+}
+#dot10{
+    animation: boing 1s ease-out;
+    animation-iteration-count: infinite;
+    animation-delay: 0.8s;
+}
+
       `,
     },
   },
