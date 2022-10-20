@@ -11,7 +11,7 @@ const Boards = () => {
   const dispatch = useDispatch();
   const { todos } = useSelector((state) => state);
   const phases = JSON.parse(process.env.REACT_APP_PHASES);
-  useLayoutEffect(() => {
+  useEffect(() => {
     dispatch(getTodos());
   }, [dispatch]);
   console.log("todos :", todos);

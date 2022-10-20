@@ -6,8 +6,8 @@ import useTimeout from "../hooks/useTimeout";
 import useDebounce from "../hooks/useDebounce";
 import { useRef } from "react";
 import { useEffect } from "react";
-import btnFather from "./btnFather";
-import { useNavigate } from "react-router-dom";
+import btnFather from "./BtnFather";
+import { Link, useNavigate } from "react-router-dom";
 
 const Todo = ({ title, phase, id }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -18,10 +18,7 @@ const Todo = ({ title, phase, id }) => {
   const [newTitle, setNewTitle] = useState(todoTitle);
   const inputRef = useRef(null);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const handleClick = () => {
-    navigate(`/${id}`);
-  };
+
   const { setOut, clearOut } = useTimeout(() => {
     setIsHoveredLong(true);
   }, 1200);
@@ -205,9 +202,12 @@ const Todo = ({ title, phase, id }) => {
           </Box>
         ) : (
           <Box className={`title ${(isHoveredLong || isEditing) && "up"}`}>
-            <Box className="span" onClick={handleClick}>
-              {todoTitle}
-            </Box>
+            <Link
+              to={String(id)}
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <Box className="span">{todoTitle}</Box>
+            </Link>
           </Box>
         )}
         <btnFather.RightArrow
