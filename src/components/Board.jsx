@@ -3,7 +3,7 @@ import Todo from "./Todo";
 import { useDispatch, useSelector } from "react-redux";
 import { setPhase } from "../redux/store";
 import { Box } from "@mui/system";
-import btnFather from "./BtnFather";
+import btnFather from "./btnFather";
 
 const Board = ({ phase, todos }) => {
   const { color, num, name } = phase;

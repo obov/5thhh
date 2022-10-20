@@ -6,7 +6,7 @@ import useTimeout from "../hooks/useTimeout";
 import useDebounce from "../hooks/useDebounce";
 import { useRef } from "react";
 import { useEffect } from "react";
-import btnFather from "./BtnFather";
+import btnFather from "./btnFather";
 import { Link, useNavigate } from "react-router-dom";
 
 const Todo = ({ title, phase, id }) => {

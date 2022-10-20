@@ -1,64 +1,49 @@
+import { Input } from "@mui/icons-material";
+import { Button } from "@mui/material";
 import React, { useState } from "react";
-import styled from "styled-components";
-import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
-import { Button, Input } from "../../elem";
-import { __addComment } from "../../redux/modules/commentsSlice";
+import useAxios from "../hooks/useAxios";
+import btnFather from "./btnFather";
 
-const AddCommentForm = () => {
-  const dispatch = useDispatch();
-  const { id } = useParams();
+const Comment = ({ comment }) => {
+  const [isEdit, setIsEdit] = useState(false);
+  const [editComment, setEditComment] = useState(comment?.body ?? "");
+  const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
-  const [comment, setComment] = useState({
-    username: "",
-    content: "",
-  });
-
-  const onAddCommentButtonHandler = (event) => {
-    event.preventDefault();
-    if (comment.content.trim() === "" || comment.username.trim() === "") {
-      return alert("모든 항목을 입력해주세요.");
-    }
-    dispatch(__addComment({ todoId: id, ...comment }));
-    setComment({
-      username: "",
-      content: "",
-    });
+  const { fetcher: patchComment } = useAxios(
+    apiBaseUrl + "comments/" + comment?.id,
+    "patch"
+  );
+  const { fetcher: deleteComment } = useAxios(
+    apiBaseUrl + "comments/" + comment?.id,
+    "delete"
+  );
+  const handleClickDelete = () => {
+    deleteComment();
   };
-
-  const onChangeInputHandler = (event) => {
-    const { name, value } = event.target;
-    setComment({
-      ...comment,
-      [name]: value,
-    });
+  const handleClickEdit = () => {
+    setIsEdit(true);
+  };
+  const handleClickConfirm = () => {
+    patchComment({ id: comment?.id, body: editComment });
   };
 
   return (
-    <StForm onSubmit={onAddCommentButtonHandler}>
-      <StNameInput>
-        <Input
-          placeholder="이름 (5자 이내)"
-          value={comment.username}
-          type="text"
-          name="username"
-          onChange={onChangeInputHandler}
-          maxLength={5}
-        />
-      </StNameInput>
-      <Input
-        placeholder="댓글을 추가하세요. (100자 이내)"
-        value={comment.content}
-        name="content"
-        type="text"
-        onChange={onChangeInputHandler}
-        maxLength={100}
-      />
-      <Button type="submit" onClick={onAddCommentButtonHandler}>
-        추가하기
-      </Button>
-    </StForm>
+    <div>
+      {!isEdit ? (
+        <div>{comment?.body ?? ""}</div>
+      ) : (
+        <input value={editComment} />
+      )}
+      <div>
+        <btnFather.Delete onClick={handleClickDelete} />
+        {!isEdit ? (
+          <btnFather.Edit onClick={handleClickEdit} />
+        ) : (
+          <button onClick={handleClickConfirm}>확인</button>
+        )}
+      </div>
+    </div>
   );
 };
 
-export default AddCommentForm;
+export default Comment;

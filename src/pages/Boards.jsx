@@ -2,13 +2,8 @@ import { Box } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import Board from "../components/Board";
 import MainInput from "../components/MainInput";
-<<<<<<< Updated upstream
 import { useLayoutEffect } from "react";
 import { getTodos } from "../redux/modules/todoReducer";
-=======
-import { useLayoutEffect, useEffect } from "react";
-import { getTodos } from "../redux/store";
->>>>>>> Stashed changes
 import Spinner from "../components/Spinner";
 import { Link } from "react-router-dom";
 
@@ -16,7 +11,7 @@ const Boards = () => {
   const dispatch = useDispatch();
   const { todos } = useSelector((state) => state);
   const phases = JSON.parse(process.env.REACT_APP_PHASES);
-  useEffect(() => {
+  useLayoutEffect(() => {
     dispatch(getTodos());
   }, [dispatch]);
   console.log("todos :", todos);

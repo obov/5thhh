@@ -1,69 +1,67 @@
-<<<<<<< Updated upstream
-import { useEffect, useLayoutEffect } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useAxios from "../hooks/useAxios";
 import { getTodos } from "../redux/modules/todoReducer";
+import { Box, Button, Input } from "@mui/material";
+import { useNavigate, useParams } from "react-router-dom";
+import Comment from "../components/Comment";
 
 const Detail = () => {
+  const [newComment, setNewComment] = useState("");
+  const [comments, setComments] = useState(null);
   const dispatch = useDispatch();
-  const todo = useSelector((state) => state.todo);
   const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
-  console.log(todo);
+  const { id } = useParams(); //주소를 보내주는 id
+
+  const todos = useSelector((state) => state.todos.data);
+
   const { data, fetcher: getComment } = useAxios(
     apiBaseUrl + "comments",
     "get"
   );
+
+  const { fetcher: postComment, isLoading } = useAxios(
+    apiBaseUrl + "comments",
+    "post"
+  );
+
+  const handleSubmit = (e) => {
+    e.preventDefault(); //새로고침 막아줌
+    postComment({ id: Date.now(), body: newComment, todoId: +id });
+    setNewComment("");
+  };
+  const handleChange = (e) => {
+    setNewComment(e.target.value);
+  };
+
   useLayoutEffect(() => {
     dispatch(getTodos());
-  }, [dispatch]);
+  }, [dispatch, isLoading]);
 
   useEffect(() => {
-    console.log(data);
+    getComment();
+  }, []);
+
+  useEffect(() => {
+    setComments(data);
   }, [data]);
+
   return (
     <div
       onClick={() => {
         getComment();
       }}
     >
-      Detail
-    </div>
-  );
-};
-=======
-import { Box, Input } from "@mui/material";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
-import getTodos from "../redux/store";
-
-function Detail() {
-  // const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { id } = useParams(); //주소를 보내주는 id
-
-  // useEffect(() => {
-  //   dispatch(getTodos());
-  // }, [dispatch]);
-
-  const todos = useSelector((state) => state.todos.data);
-  console.log(todos);
-  return (
-    <div>
       <Box
         sx={{
-          background:
-            "linearGradient(54deg, rgba(233,233,219,1) 0%, rgba(255,255,192,0.8071603641456583) 45%, rgba(255,208,105,0.7819502801120448) 100%)",
-          borderRadius: "20px",
           fontSize: "45px",
-          marginTop: "300px",
+          marginTop: "250px",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
         }}
       >
-        {" "}
         🔔
         {
           todos.find(function (todo) {
@@ -72,29 +70,33 @@ function Detail() {
         }
       </Box>
       <div>
-        <Input
-          placeholder="댓글"
-          // value={comment.content}
-          name="content"
-          type="text"
-          // onChange={onChangeInputHandler}
-          maxLength={100}
-        />
-        <button type="submit">추가하기</button>
+        <form onSubmit={handleSubmit}>
+          {/* 기본틀임 enter만 쳐도 자동으로 submit됨 */}
+          <Input
+            value={newComment}
+            onChange={handleChange} //글자적어주기
+            placeholder="댓글"
+            name="content"
+            type="text"
+            maxLength={100}
+            style={{ marginTop: "170px" }}
+          />
+          <Button style={{ fontSize: "20px" }} type="submit">
+            추가하기
+          </Button>
+        </form>
+        <Box>
+          {comments
+            ?.filter((comment) => {
+              return comment.todoId == id;
+            })
+            .map((comment, i) => {
+              return <Comment key={i} comment={comment} />;
+            })}
+        </Box>
       </div>
     </div>
   );
-}
->>>>>>> Stashed changes
+};
 
 export default Detail;
-/*
-
-const { fetcher: postComment } = useAxios(apiBaseUrl + "comments", "post");
-
-const { fetcher: deletComment } = useAxios(apiBaseUrl + "comments", "delete");
-
-const { fetcher: patchComment } = useAxios(apiBaseUrl + "comments", "patch");
-
-
- */
